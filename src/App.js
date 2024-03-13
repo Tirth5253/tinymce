@@ -96,10 +96,11 @@ const MyEditor = () => {
       mentionDropdownRef.current = null;
     }
   };
+  console.log(process.env.REACT_APP_API_KEY)
   return (
     <Editor
       onKeyUp={handleEditorKeyUp}
-      apiKey={process.env.REACT_APP_API_KEY}
+      apiKey='ra9rrjbq3oxwoet1y1akxu59dsbb395zplavc5hsn3ce1weg'
       init={{
         height: 500,
         menubar: false,
