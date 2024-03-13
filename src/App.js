@@ -97,12 +97,12 @@ const MyEditor = () => {
     }
   };
 const api=process.env.REACT_APP_API_KEY
-  
+const REACT_APP_API_KEY='ra9rrjbq3oxwoet1y1akxu59dsbb395zplavc5hsn3ce1weg'
   return (
     <Editor
   
       onKeyUp={handleEditorKeyUp}
-      apiKey={api}
+      apiKey={REACT_APP_API_KEY}
       init={{
         height: 500,
         menubar: false,
