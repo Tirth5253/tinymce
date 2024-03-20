@@ -4,7 +4,7 @@ import EditorComponent from './EditorComponent';
 const App = () => {
   return (
     <div>
-      <EditorComponent trigger={"@"} />
+      <EditorComponent trigger={"{{"} />      
     </div>
   );
 };

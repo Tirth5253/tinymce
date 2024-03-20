@@ -62,7 +62,6 @@ const EditorComponent = ({ trigger }) => {
   const mentionOptions = mentionItems
     .filter(item => item.name.toLowerCase().includes(mentionQuery.toLowerCase()))
     .map(item => ({ value: item.id, label: `{{${item.name}}}` }));
-    console.log('mentionQuery',mentionQuery)
 
   const handleEditorChange = (content, editor) => {
     const lastChars = content.slice(-(trigger.length));
