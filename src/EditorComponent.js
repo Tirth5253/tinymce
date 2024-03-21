@@ -14,16 +14,16 @@ const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles
   useEffect(() => {
     const fetchData = () => {
       const initialData = [
-        { id: 1, name: "John Smith" },
-        { id: 2, name: "Alice Johnson" },
-        { id: 3, name: "Michael Brown" },
-        { id: 4, name: "Emily Williams" },
-        { id: 5, name: "David King" },
-        { id: 1, name: "John Smith" },
-        { id: 2, name: "Alice Johnson" },
-        { id: 3, name: "Michael Brown" },
-        { id: 4, name: "Emily Williams" },
-        { id: 5, name: "David King" }
+        { id: 1, label: "John Smith" },
+        { id: 2, label: "Alice Johnson" },
+        { id: 3, label: "Michael Brown" },
+        { id: 4, label: "Emily Williams" },
+        { id: 5, label: "David King" },
+        { id: 1, label: "John Smith" },
+        { id: 2, label: "Alice Johnson" },
+        { id: 3, label: "Michael Brown" },
+        { id: 4, label: "Emily Williams" },
+        { id: 5, label: "David King" }
       ];
       setMentionItems(initialData);
     };
@@ -64,7 +64,7 @@ const getCaretPosition = () => {
   };
 
 const mentionOptions = mentionItems
-    .filter(item => item.name.toLowerCase().includes(mentionQuery.toLowerCase()))
+    .filter(item => item[dataKey].toLowerCase().includes(mentionQuery.toLowerCase()))
     .map(item => ({ value: item.id, label: `{{${item[dataKey]}}}` }));
 
 
@@ -124,6 +124,7 @@ const handleEditorChange = (content, editor) => {
         controlStyles={controlStyles}
         menuStyles={menuStyles}
         optionStyles={optionStyles}
+        dataKey={dataKey}
       />
     </div>  
   );

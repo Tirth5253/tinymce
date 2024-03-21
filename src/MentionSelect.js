@@ -1,12 +1,12 @@
 import React from 'react';
 import Select from 'react-select';
 
-const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles }) => {
+const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey }) => {
 
   const CustomOption = ( data) => ( 
 
     <div  style={{color:'blue',padding:'10px'}}>
-      <span style={{backgroundColor:'red',cursor:'pointer'}}>{data.label}</span>
+      <span style={{backgroundColor:'red',cursor:'pointer'}}>{data[dataKey]}</span>
     </div>
   );
 
