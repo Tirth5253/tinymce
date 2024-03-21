@@ -1,14 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import MentionSelect from './MentionSelect';
+import './editor.css'
 
-const EditorComponent = ({ trigger }) => {
+const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles }) => {
   const editorRef = useRef(null);
   const [mentionItems, setMentionItems] = useState([]);
   const [mentionQuery, setMentionQuery] = useState('');
   const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });
   const [selectedOption, setSelectedOption] = useState(null);
-
+  
+  
   useEffect(() => {
     const fetchData = () => {
       const initialData = [
@@ -33,46 +35,49 @@ const EditorComponent = ({ trigger }) => {
 
   };
 
-  const handleMentionInputChange = (newValue) => {
+const handleMentionInputChange = (newValue) => {
     setMentionQuery(newValue);
   };
 
-  const handleMentionItemSelect = (item) => {
+const handleMentionItemSelect = (item) => {
     setSelectedOption(false);
     const range = editorRef.current.editor.selection.getRng();
     const selectedContent = range.startContainer.data;
     const atIndex = selectedContent.lastIndexOf(`${trigger}`);
-    const newText = selectedContent.substring(0, `${trigger}`) + `${item.label}`;
+    let newText = selectedContent.substring(0, `${trigger}`) + `${item.label}`;
     const newRange = document.createRange();
     newRange.setStart(range.startContainer, atIndex);
     newRange.setEnd(range.startContainer, range.startOffset);
     newRange.deleteContents();
+    
     newRange.insertNode(document.createTextNode(newText));
+   
+
     editorRef.current.editor.focus();
-    const cursorPosition = getCaretPosition();
-    setCursorPosition(cursorPosition);
+ 
   };
 
-  const getCaretPosition = () => {
+const getCaretPosition = () => {
     const range = editorRef.current.editor.selection.getRng();
     const rect = range.getBoundingClientRect();
     return { top: rect.bottom + window.scrollY, left: rect.left + window.scrollX };
   };
 
-  const mentionOptions = mentionItems
+const mentionOptions = mentionItems
     .filter(item => item.name.toLowerCase().includes(mentionQuery.toLowerCase()))
-    .map(item => ({ value: item.id, label: `{{${item.name}}}` }));
+    .map(item => ({ value: item.id, label: `{{${item[dataKey]}}}` }));
 
-  const handleEditorChange = (content, editor) => {
+
+const handleEditorChange = (content, editor) => {
     const lastChars = content.slice(-(trigger.length));
-
     if (lastChars === trigger) {
       const cursorPosition = getCaretPosition();
       setCursorPosition(cursorPosition);
       setSelectedOption(true);
-    } else {
+    } else {  
       setSelectedOption(false);
     }
+    
   };
 
   return (
@@ -84,6 +89,7 @@ const EditorComponent = ({ trigger }) => {
           menubar: false,
           plugins: [
             'advlist autolink lists link image',
+            "noneditable",
             'charmap print preview anchor help',
             'searchreplace visualblocks code',
             'insertdatetime media table paste wordcount'
@@ -98,23 +104,28 @@ const EditorComponent = ({ trigger }) => {
               handleEditorChange(editor.getContent({ format: 'text' }), editor);
             });
             editor.on('keyup', function (e) {
-              handleEditorKeyUp(e);
+              handleEditorKeyUp(e); 
             });
             editor.on('click', function (e) {
               setSelectedOption(null);
+              
             });
           }
         }}
         ref={editorRef}
       />
       <MentionSelect
+    
         cursorPosition={cursorPosition}
         selectedOption={selectedOption}
         mentionOptions={mentionOptions}
         handleMentionInputChange={handleMentionInputChange}
         handleMentionItemSelect={handleMentionItemSelect}
+        controlStyles={controlStyles}
+        menuStyles={menuStyles}
+        optionStyles={optionStyles}
       />
-    </div>
+    </div>  
   );
 };
 
