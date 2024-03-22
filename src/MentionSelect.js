@@ -1,15 +1,15 @@
 import React from 'react';
 import Select from 'react-select';
 
-const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey }) => {
+const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey,placeholder,customOptionStyle }) => {
 
   const CustomOption = ( data) => ( 
 
     <div  style={{color:'blue',padding:'10px'}}>
-      <span style={{backgroundColor:'red',cursor:'pointer'}}>{data[dataKey]}</span>
+      <span style={{backgroundColor:'red',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
     </div>
   );
-
+// console.log(placeholder)
   return (
     <>
       {cursorPosition.top !== 0 && selectedOption && (
@@ -18,7 +18,8 @@ const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleM
           options={mentionOptions}
           onInputChange={handleMentionInputChange}
           onChange={handleMentionItemSelect}
-          placeholder="Type to search"
+          placeholder={placeholder}
+          
           autoFocus={true}
           openMenuOnFocus={true}
           components={{

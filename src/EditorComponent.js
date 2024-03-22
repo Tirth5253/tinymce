@@ -3,12 +3,12 @@ import { Editor } from '@tinymce/tinymce-react';
 import MentionSelect from './MentionSelect';
 import './editor.css'
 
-const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles }) => {
+const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles,placeHolder,nonEditStyle,customOptionStyle }) => {
   const editorRef = useRef(null);
-  const [mentionItems, setMentionItems] = useState([]);
-  const [mentionQuery, setMentionQuery] = useState('');
-  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [mentionItems, setMentionItems] = useState([]);                                                         //this use State is Contains our data
+  const [mentionQuery, setMentionQuery] = useState('');                                                         //this will stores the interMediate Value of the Text we type in the Search area of the React Select
+  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });                                    //State that will stores the current position of the Cursor 
+  const [selectedOption, setSelectedOption] = useState(null);                                                   //Acting as a Flag For the React Select Component
   
   
   useEffect(() => {
@@ -31,18 +31,17 @@ const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles
 
   }, []);
 
-  const handleEditorKeyUp = (e) => {
 
-  };
 
-const handleMentionInputChange = (newValue) => {
+const handleMentionInputChange = (newValue) => {                                                              //Function that Will set the Text that we type in the Search Box of select
     setMentionQuery(newValue);
   };
 
 const handleMentionItemSelect = (item) => {
     setSelectedOption(false);
-    const range = editorRef.current.editor.selection.getRng();
+    const range = editorRef.current.editor.selection.getRng();                                               //this line provides the slection area like start , end etc so we can modify contnet based on the range
     const selectedContent = range.startContainer.data;
+    console.log(selectedContent);
     const atIndex = selectedContent.lastIndexOf(`${trigger}`);
     let newText = selectedContent.substring(0, `${trigger}`) + `${item.label}`;
     const newRange = document.createRange();
@@ -50,11 +49,18 @@ const handleMentionItemSelect = (item) => {
     newRange.setEnd(range.startContainer, range.startOffset);
     newRange.deleteContents();
     
-    newRange.insertNode(document.createTextNode(newText));
    
+    const nonEditableSpan = editorRef.current.editor.dom.create('span', {
+      contenteditable: 'false',
+      'data-mce-contenteditable': 'false',
+      style:nonEditStyle,
+      
+    }, newText);
+    
 
+    newRange.insertNode(nonEditableSpan);
     editorRef.current.editor.focus();
- 
+; 
   };
 
 const getCaretPosition = () => {
@@ -79,7 +85,7 @@ const handleEditorChange = (content, editor) => {
     }
     
   };
-
+console.log(placeHolder)
   return (
     <div>
       <Editor
@@ -89,7 +95,7 @@ const handleEditorChange = (content, editor) => {
           menubar: false,
           plugins: [
             'advlist autolink lists link image',
-            "noneditable",
+            'noneditable',
             'charmap print preview anchor help',
             'searchreplace visualblocks code',
             'insertdatetime media table paste wordcount'
@@ -103,9 +109,7 @@ const handleEditorChange = (content, editor) => {
             editor.on('input', function (e) {
               handleEditorChange(editor.getContent({ format: 'text' }), editor);
             });
-            editor.on('keyup', function (e) {
-              handleEditorKeyUp(e); 
-            });
+            
             editor.on('click', function (e) {
               setSelectedOption(null);
               
@@ -125,6 +129,8 @@ const handleEditorChange = (content, editor) => {
         menuStyles={menuStyles}
         optionStyles={optionStyles}
         dataKey={dataKey}
+        placeholder={placeHolder}
+        customOptionStyle={customOptionStyle}
       />
     </div>  
   );
