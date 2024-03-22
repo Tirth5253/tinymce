@@ -6,7 +6,7 @@ const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleM
   const CustomOption = ( data) => ( 
 
     <div  style={{color:'blue',padding:'10px'}}>
-      <span style={{backgroundColor:'red',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
+      <span style={{backgroundColor:'',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
     </div>
   );
 // console.log(placeholder)

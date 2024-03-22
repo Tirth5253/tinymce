@@ -5,10 +5,10 @@ import './editor.css'
 
 const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles,placeHolder,nonEditStyle,customOptionStyle }) => {
   const editorRef = useRef(null);
-  const [mentionItems, setMentionItems] = useState([]);                                                         //this use State is Contains our data
-  const [mentionQuery, setMentionQuery] = useState('');                                                         //this will stores the interMediate Value of the Text we type in the Search area of the React Select
-  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });                                    //State that will stores the current position of the Cursor 
-  const [selectedOption, setSelectedOption] = useState(null);                                                   //Acting as a Flag For the React Select Component
+  const [mentionItems, setMentionItems] = useState([]);                                                         
+  const [mentionQuery, setMentionQuery] = useState('');                                                         
+  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });                                    
+  const [selectedOption, setSelectedOption] = useState(null);                                                  
   
   
   useEffect(() => {
@@ -33,16 +33,15 @@ const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles
 
 
 
-const handleMentionInputChange = (newValue) => {                                                              //Function that Will set the Text that we type in the Search Box of select
+const handleMentionInputChange = (newValue) => {                                                              
     setMentionQuery(newValue);
   };
 
 const handleMentionItemSelect = (item) => {
     setSelectedOption(false);
-    const range = editorRef.current.editor.selection.getRng();                                               //this line provides the slection area like start , end etc so we can modify contnet based on the range
-    const selectedContent = range.startContainer.data;
-    console.log(selectedContent);
-    const atIndex = selectedContent.lastIndexOf(`${trigger}`);
+    const range = editorRef.current.editor.selection.getRng();                                               
+    const selectedContent = range.startContainer.data;                                                       
+    const atIndex = selectedContent.lastIndexOf(`${trigger}`);                                               
     let newText = selectedContent.substring(0, `${trigger}`) + `${item.label}`;
     const newRange = document.createRange();
     newRange.setStart(range.startContainer, atIndex);
@@ -74,18 +73,30 @@ const mentionOptions = mentionItems
     .map(item => ({ value: item.id, label: `{{${item[dataKey]}}}` }));
 
 
-const handleEditorChange = (content, editor) => {
-    const lastChars = content.slice(-(trigger.length));
-    if (lastChars === trigger) {
-      const cursorPosition = getCaretPosition();
-      setCursorPosition(cursorPosition);
-      setSelectedOption(true);
-    } else {  
-      setSelectedOption(false);
-    }
+    const handleEditorChange = () => {
+      const range = editorRef.current.editor.selection.getRng();
+      const cursorPosition = range.startOffset;                                                            
     
-  };
-console.log(placeHolder)
+      let textBeforeCursor = '';
+    
+      if (range.startContainer.nodeType === Node.TEXT_NODE) {
+        textBeforeCursor = range.startContainer.data.substring(0, cursorPosition);
+      } else if (range.startContainer.nodeType === Node.ELEMENT_NODE) {
+        textBeforeCursor = range.startContainer.textContent.substring(0, cursorPosition);
+      }
+    
+      textBeforeCursor = textBeforeCursor.slice(-trigger.length);
+      console.log(textBeforeCursor);
+    
+      if (textBeforeCursor === trigger) {
+        const cursorPosition = getCaretPosition();
+        setCursorPosition(cursorPosition);
+        setSelectedOption(true);
+      } else {
+        setSelectedOption(false);
+      }
+    };
+    
   return (
     <div>
       <Editor
@@ -107,13 +118,16 @@ console.log(placeHolder)
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           setup: function (editor) {
             editor.on('input', function (e) {
-              handleEditorChange(editor.getContent({ format: 'text' }), editor);
+              // handleEditorChange();
             });
             
             editor.on('click', function (e) {
               setSelectedOption(null);
               
             });
+            editor.on('SelectionChange',function(e){
+              handleEditorChange();
+            })
           }
         }}
         ref={editorRef}
