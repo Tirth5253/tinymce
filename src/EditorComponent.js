@@ -3,7 +3,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import MentionSelect from './MentionSelect';
 import './editor.css'
 
-const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles,placeHolder,nonEditStyle,customOptionStyle }) => {
+const EditorComponent = ({ trigger,dataKey,controlStyles,menuStyles,optionStyles,containerStyles,placeHolder,nonEditStyle,customOptionStyle,trigger1 }) => {
   const editorRef = useRef(null);
   const [mentionItems, setMentionItems] = useState([]);                                                         
   const [mentionQuery, setMentionQuery] = useState('');                                                         
@@ -42,7 +42,7 @@ const handleMentionItemSelect = (item) => {
     const range = editorRef.current.editor.selection.getRng();                                               
     const selectedContent = range.startContainer.data;                                                       
     const atIndex = selectedContent.lastIndexOf(`${trigger}`);                                               
-    let newText = selectedContent.substring(0, `${trigger}`) + `${item.label}`;
+    let newText = selectedContent.substring(0, `${trigger}`) + `${item[dataKey]}`;
     const newRange = document.createRange();
     newRange.setStart(range.startContainer, atIndex);
     newRange.setEnd(range.startContainer, range.startOffset);
@@ -76,9 +76,9 @@ const mentionOptions = mentionItems
     const handleEditorChange = () => {
       const range = editorRef.current.editor.selection.getRng();
       const cursorPosition = range.startOffset;                                                            
-    
+      
       let textBeforeCursor = '';
-    
+      
       if (range.startContainer.nodeType === Node.TEXT_NODE) {
         textBeforeCursor = range.startContainer.data.substring(0, cursorPosition);
       } else if (range.startContainer.nodeType === Node.ELEMENT_NODE) {
@@ -95,6 +95,12 @@ const mentionOptions = mentionItems
       } else {
         setSelectedOption(false);
       }
+    };
+    
+    const handleEditorClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setSelectedOption(null);
     };
     
   return (
@@ -118,16 +124,16 @@ const mentionOptions = mentionItems
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           setup: function (editor) {
             editor.on('input', function (e) {
-              // handleEditorChange();
+              handleEditorChange();
             });
             
-            editor.on('click', function (e) {
-              setSelectedOption(null);
-              
-            });
+            
             editor.on('SelectionChange',function(e){
-              handleEditorChange();
-            })
+              // handleEditorChange();
+            });
+            editor.on('click', function (e) {
+              handleEditorClick(e);
+            });
           }
         }}
         ref={editorRef}
@@ -145,6 +151,7 @@ const mentionOptions = mentionItems
         dataKey={dataKey}
         placeholder={placeHolder}
         customOptionStyle={customOptionStyle}
+        containerStyles={containerStyles}
       />
     </div>  
   );
