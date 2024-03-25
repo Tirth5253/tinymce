@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey,placeholder,customOptionStyle }) => {
+const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey,placeholder,customOptionStyle,selectTrigger,trigger,trigger1}) => {
 
   const CustomOption = ( data) => ( 
 
@@ -9,7 +9,18 @@ const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleM
       <span style={{backgroundColor:'',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
     </div>
   );
-// console.log(placeholder)
+
+  const CustomOption1 = ( data) => ( 
+    <div  style={{color:'red',padding:'10px'}}>
+      <span style={{backgroundColor:'',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
+    </div>
+  );
+
+const isTrigger=()=>{
+  if(selectTrigger===trigger){
+    return true;
+  }
+}
   return (
     <>
       {cursorPosition.top !== 0 && selectedOption && (
@@ -27,8 +38,8 @@ const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleM
               <div 
                 {...innerProps} 
                 ref={innerRef}  
-              >
-               {CustomOption(data)}
+              >{isTrigger()? 
+               CustomOption(data) :CustomOption1(data) }
               </div>
             )
           }}
