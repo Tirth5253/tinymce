@@ -11,7 +11,7 @@ const EditorComponent = ({ trigger,dataKey, dataKey1,controlStyles,menuStyles,op
   const [selectTrigger,setSelectTrigger]=useState(null);
   const [selectKey,setselectKey]=useState(null);
   
-  useEffect(() => {
+useEffect(() => {
     const fetchData = () => {
       const initialData = [
         { id: 1, label: "John Smith",name12:"abc" },
@@ -27,15 +27,13 @@ const EditorComponent = ({ trigger,dataKey, dataKey1,controlStyles,menuStyles,op
       ];
       const initialData1 = [
         { id: 1, name: "Tirth Joshi",name12:"abc" },
-        { id: 2, name: "Alice Johnson" ,name12:"abc"},
-        { id: 3, name: "Michael Brown" ,name12:"abc"},
-        { id: 4, name: "Emily Williams" ,name12:"abc"},
-        { id: 5, name: "David King" ,name12:"abc"},
-        { id: 1, name: "John Smith" ,name12:"abc"},
-        { id: 2, name: "Alice Johnson" ,name12:"abc"},
-        { id: 3, name: "Michael Brown" ,name12:"abc"},
-        { id: 4, name: "Emily Williams",name12:"abc" },
-        { id: 5, name: "David King",name12:"abc" }
+        { id: 2, name: "Tirth Joshi" ,name12:"abc"},
+        { id: 3, name: "Tirth Joshi" ,name12:"abc"},
+        { id: 4, name: "Tirth Joshi" ,name12:"abc"},
+        { id: 5, name: "Tirth Joshi" ,name12:"abc"},
+        { id: 1, name: "Tirth Joshi" ,name12:"abc"},
+        { id: 2, name: "Tirth Joshi" ,name12:"abc"},
+        
       ];
       if(selectTrigger===trigger1)
       setMentionItems(initialData1);
@@ -65,7 +63,7 @@ const handleMentionItemSelect = (item) => {
     newRange.deleteContents();
     
    
-    const nonEditableSpan = editorRef.current.editor.dom.create('span', {
+const nonEditableSpan = editorRef.current.editor.dom.create('span', {
       contenteditable: 'false',
       'data-mce-contenteditable': 'false',
       style:nonEditStyle,
@@ -84,12 +82,13 @@ const getCaretPosition = () => {
     return { top: rect.bottom + window.scrollY, left: rect.left + window.scrollX };
   };
 
-  const mentionOptions = mentionItems
+const mentionOptions = mentionItems
   .filter(item => item[selectKey] && item[selectKey].toLowerCase().includes(mentionQuery.toLowerCase()))
   .map(item => ({ value: item.id, label: `{{${item[selectKey]}}}` }) );
 
 
-  const handleEditorChange = () => {
+
+const handleEditorChange = () => {
     const range = editorRef.current.editor.selection.getRng();
     const cursorPosition = range.startOffset;
   
@@ -119,7 +118,7 @@ const getCaretPosition = () => {
   };
   
     
-    const handleEditorClick = (e) => {
+const handleEditorClick = (e) => {
       e.preventDefault();
       e.stopPropagation();
       setSelectedOption(null);

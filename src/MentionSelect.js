@@ -4,7 +4,6 @@ import Select from 'react-select';
 const MentionSelect = ({ cursorPosition, selectedOption, mentionOptions, handleMentionInputChange, handleMentionItemSelect,controlStyles,menuStyles,optionStyles,containerStyles,dataKey,placeholder,customOptionStyle,selectTrigger,trigger,trigger1}) => {
 
   const CustomOption = ( data) => ( 
-
     <div  style={{color:'blue',padding:'10px'}}>
       <span style={{backgroundColor:'',cursor:'pointer',...customOptionStyle} } className=''>{data[dataKey]}</span>
     </div>
@@ -38,8 +37,10 @@ const isTrigger=()=>{
               <div 
                 {...innerProps} 
                 ref={innerRef}  
-              >{isTrigger()? 
+              >
+                {isTrigger()? 
                CustomOption(data) :CustomOption1(data) }
+               
               </div>
             )
           }}
